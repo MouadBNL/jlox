@@ -2,7 +2,7 @@
 A Tree-Walk Interpreter from craftinginterpreters.com
 
 ## Chapters
-- [ ] Scanning
+- [x] Scanning
 - [ ] Representing Code
 - [ ] Parsing Expressions
 - [ ] Evaluating Expressions
