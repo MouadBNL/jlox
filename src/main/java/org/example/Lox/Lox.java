@@ -13,10 +13,12 @@ public class Lox {
     public static void run(String src) {
         Scanner scanner = new Scanner(src);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expr expr = parser.parse();
 
-        for(Token token: tokens) {
-            System.out.println(token);
-        }
+        if(hadError) return;
+
+        System.out.println(new AstPrinter().print(expr));
     }
     public static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
@@ -40,6 +42,14 @@ public class Lox {
 
     public static void error(int line, String message) {
         report(line, "", message);
+    }
+
+    public static void error(Token token,String message) {
+        if(token.type == TokenType.EOF) {
+            report(token.line, ", at end", message);
+        } else {
+            report(token.line, "at '" + token.lexeme + "'", message);
+        }
     }
 
     public static void report(int line, String where, String message) {
