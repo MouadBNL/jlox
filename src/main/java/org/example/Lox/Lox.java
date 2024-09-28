@@ -46,4 +46,20 @@ public class Lox {
         System.err.println("[Line "+ line +"] Error " + where + ": " + message);
         hadError = true;
     }
+
+    public static void demo() {
+        Expr expr = new Expr.Binary(
+                new Expr.Unary(
+                        new Token(TokenType.MINUS, "-", null, 1),
+                        new Expr.Literal(123)
+                ),
+                new Token(TokenType.STAR, "*", null, 1),
+                new Expr.Grouping(
+                        new Expr.Literal(78.6)
+                )
+        );
+
+        var printer = new AstPrinter();
+        System.out.println(printer.print(expr));
+    }
 }

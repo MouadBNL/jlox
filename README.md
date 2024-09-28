@@ -3,7 +3,7 @@ A Tree-Walk Interpreter from craftinginterpreters.com
 
 ## Chapters
 - [x] Scanning
-- [ ] Representing Code
+- [x] Representing Code
 - [ ] Parsing Expressions
 - [ ] Evaluating Expressions
 - [ ] Statements and State
