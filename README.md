@@ -5,7 +5,7 @@ A Tree-Walk Interpreter from craftinginterpreters.com
 - [x] Scanning
 - [x] Representing Code
 - [x] Parsing Expressions
-- [ ] Evaluating Expressions
+- [x] Evaluating Expressions
 - [ ] Statements and State
 - [ ] Control Flow
 - [ ] Functions

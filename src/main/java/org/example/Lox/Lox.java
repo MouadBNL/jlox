@@ -1,5 +1,7 @@
 package org.example.Lox;
 
+import org.example.Lox.Exception.RuntimeError;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +11,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
+    public static final Interpreter interpreter = new Interpreter();
     static Boolean hadError = true;
+    static Boolean hadRuntimeError = false;
+
     public static void run(String src) {
         Scanner scanner = new Scanner(src);
         List<Token> tokens = scanner.scanTokens();
@@ -19,11 +24,14 @@ public class Lox {
         if(hadError) return;
 
         System.out.println(new AstPrinter().print(expr));
+        interpreter.interpret(expr);
+
     }
     public static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
         if(hadError) System.exit(65);
+        if(hadRuntimeError) System.exit(70);
     }
     public static void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
@@ -71,5 +79,10 @@ public class Lox {
 
         var printer = new AstPrinter();
         System.out.println(printer.print(expr));
+    }
+
+    public static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 }
