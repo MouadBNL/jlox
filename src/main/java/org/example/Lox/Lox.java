@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Lox {
     public static final Interpreter interpreter = new Interpreter();
-    static Boolean hadError = true;
+    static Boolean hadError = false;
     static Boolean hadRuntimeError = false;
 
     public static void run(String src) {

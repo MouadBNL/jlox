@@ -5,7 +5,7 @@ import org.example.Lox.Exception.RuntimeError;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private final Environment environment = new Environment();
+    private Environment environment = new Environment();
 
     void interpret(List<Stmt> statements) {
         try {
@@ -19,6 +19,23 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     private void execute(Stmt stmt) {
         stmt.accept(this);
+    }
+
+    private void executeBlock(List<Stmt> statements, Environment env) {
+        Environment previous = this.environment;
+        try {
+            this.environment = env;
+            for(Stmt stmt : statements) {
+                execute(stmt);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
+    @Override
+    public Void visitBlockStmt(Stmt.Block block) {
+        executeBlock(block.statements, new Environment(environment));
+        return null;
     }
 
     @Override

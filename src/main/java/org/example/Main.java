@@ -6,11 +6,12 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        Lox.demo();
+        //Lox.demo();
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
             System.exit(64);
         } else if (args.length == 1) {
+            System.out.println("Executing script: " + args[0]);
             Lox.runFile(args[0]);
         } else {
             Lox.runPrompt();
