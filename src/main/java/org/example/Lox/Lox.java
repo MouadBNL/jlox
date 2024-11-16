@@ -19,12 +19,11 @@ public class Lox {
         Scanner scanner = new Scanner(src);
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
-        Expr expr = parser.parse();
-
+        List<Stmt> statements = parser.parse();
         if(hadError) return;
 
-        System.out.println(new AstPrinter().print(expr));
-        interpreter.interpret(expr);
+        //System.out.println(new AstPrinter().print(statements));
+        interpreter.interpret(statements);
 
     }
     public static void runFile(String path) throws IOException {
