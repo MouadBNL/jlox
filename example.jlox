@@ -1,10 +1,6 @@
-var value = 10;
-var error_margin = 1;
+var a = 0;
 
-var a = 9;
-
-if( a < value - error_margin or a > value + error_margin) {
-    print "value error too great";
-} else {
-    print "Value error withing margin";
+while (a < 10) {
+    a = a + 1;
+    print a;
 }
