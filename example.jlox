@@ -1,8 +1,10 @@
-var a = 10;
-if(a < 10) {
-    print "too low";
-} else if (a == 10) {
-    print "just right";
+var value = 10;
+var error_margin = 1;
+
+var a = 9;
+
+if( a < value - error_margin or a > value + error_margin) {
+    print "value error too great";
 } else {
-    print "too high";
+    print "Value error withing margin";
 }

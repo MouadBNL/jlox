@@ -88,6 +88,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        Object left = evaluate(expr.left);
+        if(expr.operator.type == TokenType.OR && isTruthy(left)) {
+            return left;
+        }
+        if(expr.operator.type == TokenType.AND && !isTruthy(left)) {
+            return left;
+        }
+        return evaluate(expr.right);
+    }
+
+    @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }
