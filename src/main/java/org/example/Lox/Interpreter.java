@@ -6,8 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private Environment environment = new Environment();
+    private final Environment global = new Environment();
+    private Environment environment = global;
     private Boolean hitBreak = false;
+
+    public Interpreter() {
+        var clockToken = new Token(TokenType.IDENTIFIER, "clock", null, 0);
+        global.define(clockToken, new LoxCallable() {
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis();
+            }
+
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native function>";
+            }
+        });
+    }
 
     void interpret(List<Stmt> statements) {
         try {

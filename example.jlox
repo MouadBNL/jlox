@@ -1,9 +1,8 @@
 var a = 1;
 
-for(var i = 0; i < 10; i = i + 1) {
-    if(i == 5)
-        break;
-    print i;
+var t1 = clock();
+for(var i = 0; i < 10000000; i = i + 1) {
+    // print i;
     a = a * 2;
 }
 
@@ -11,9 +10,12 @@ for(var i = 0; i < 10; i = i + 1) {
 for(var i = 0; i < 10; i = i + 1) {
     if(i == 5)
         break;
-    print i;
+    // print i;
     a = a * 2;
 }
 
+var t2 = clock();
 
-print a;
+print t1;
+print t2;
+print (((t2 - t1) / 1000) + " s");
