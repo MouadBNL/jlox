@@ -2,6 +2,7 @@ package org.example.Lox;
 
 import org.example.Lox.Exception.RuntimeError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -19,7 +20,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     private void execute(Stmt stmt) {
-        if(hitBreak) return;
+        if (hitBreak) return;
         stmt.accept(this);
     }
 
@@ -27,13 +28,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Environment previous = this.environment;
         try {
             this.environment = env;
-            for(Stmt stmt : statements) {
+            for (Stmt stmt : statements) {
                 execute(stmt);
             }
         } finally {
             this.environment = previous;
         }
     }
+
     @Override
     public Void visitBlockStmt(Stmt.Block block) {
         executeBlock(block.statements, new Environment(environment));
@@ -50,7 +52,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
             execute(stmt.body);
-            if(hitBreak) break;
+            if (hitBreak) break;
         }
         hitBreak = false;
         return null;
@@ -64,9 +66,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
-        if(isTruthy(evaluate(stmt.condition))) {
+        if (isTruthy(evaluate(stmt.condition))) {
             execute(stmt.thenBranch);
-        } else if(stmt.elseBranch != null) {
+        } else if (stmt.elseBranch != null) {
             execute(stmt.elseBranch);
         }
         return null;
@@ -108,10 +110,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
-        if(expr.operator.type == TokenType.OR && isTruthy(left)) {
+        if (expr.operator.type == TokenType.OR && isTruthy(left)) {
             return left;
         }
-        if(expr.operator.type == TokenType.AND && !isTruthy(left)) {
+        if (expr.operator.type == TokenType.AND && !isTruthy(left)) {
             return left;
         }
         return evaluate(expr.right);
@@ -195,6 +197,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         }
         return null;
+    }
+
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+        List<Object> arguments = new ArrayList<>();
+        for (Expr arg : expr.arguments) {
+            arguments.add(evaluate(arg));
+        }
+
+        if (!(callee instanceof LoxCallable function)) {
+            throw new RuntimeError(expr.paren, "Tried to call a non callable object.");
+        }
+        if (arguments.size() != function.arity()) {
+            throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments, " + arguments.size() + " given.");
+        }
+        return function.call(this, arguments);
     }
 
     private boolean isTruthy(Object val) {
