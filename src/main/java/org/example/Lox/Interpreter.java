@@ -38,6 +38,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
+        } catch (BreakStatement breakStatement) {
+            Lox.runtimeError(new RuntimeError(breakStatement.getToken(), "Cannot break outside of a loop"));
+        } catch (Return returnStatement) {
+            Lox.runtimeError(new RuntimeError(returnStatement.getToken(), "Cannot return outside of a callable"));
         }
     }
 
@@ -90,7 +94,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
-        throw new BreakStatement();
+        throw new BreakStatement(stmt.breakToken);
     }
 
     @Override
@@ -114,7 +118,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitReturnStmt(Stmt.Return stmt) {
         Object value = null;
         if(stmt.value != null) value = evaluate(stmt.value);
-        throw new Return(value);
+        throw new Return(value, stmt.keyword);
     }
 
     @Override
