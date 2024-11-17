@@ -1,21 +1,8 @@
-var a = 1;
-
-var t1 = clock();
-for(var i = 0; i < 10000000; i = i + 1) {
-    // print i;
-    a = a * 2;
+fun counter(a, b, c) {
+    print a + ", " + b + ", " + c;
+    if(a > 1) counter(a-1, b, c);
+    if(b > 1) counter(a, b-1, c);
+    if(c > 1) counter(a, b, c-1);
 }
 
-
-for(var i = 0; i < 10; i = i + 1) {
-    if(i == 5)
-        break;
-    // print i;
-    a = a * 2;
-}
-
-var t2 = clock();
-
-print t1;
-print t2;
-print (((t2 - t1) / 1000) + " s");
+counter(5, 3, 2);

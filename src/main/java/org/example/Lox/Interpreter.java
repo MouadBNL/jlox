@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private final Environment global = new Environment();
-    private Environment environment = global;
+    public final Environment globals = new Environment();
+    private Environment environment = globals;
     private Boolean hitBreak = false;
 
     public Interpreter() {
         var clockToken = new Token(TokenType.IDENTIFIER, "clock", null, 0);
-        global.define(clockToken, new LoxCallable() {
+        globals.define(clockToken, new LoxCallable() {
             @Override
             public Object call(Interpreter interpreter, List<Object> arguments) {
                 return (double) System.currentTimeMillis();
@@ -45,7 +45,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         stmt.accept(this);
     }
 
-    private void executeBlock(List<Stmt> statements, Environment env) {
+    public void executeBlock(List<Stmt> statements, Environment env) {
         Environment previous = this.environment;
         try {
             this.environment = env;
@@ -66,6 +66,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        LoxFunction function = new LoxFunction(stmt);
+        environment.define(stmt.name, function);
         return null;
     }
 
