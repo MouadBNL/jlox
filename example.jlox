@@ -1,19 +1,9 @@
-var a = 1;
 
-for(var i = 0; i < 10; i = i + 1) {
-    if(i == 5)
-        break;
-    print i;
-    a = a * 2;
+for(var i = 0; i < 20; i = i + 1) {
+    var str = "";
+    for(var j = 0; j <= i; j = j + 1) {
+        str = str + "*";
+        if(j == 3) continue;
+    }
+    print str;
 }
-
-
-for(var i = 0; i < 10; i = i + 1) {
-    if(i == 5)
-        break;
-    print i;
-    a = a * 2;
-}
-
-
-print a;
