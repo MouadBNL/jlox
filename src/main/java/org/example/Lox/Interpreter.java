@@ -1,5 +1,6 @@
 package org.example.Lox;
 
+import org.example.Lox.Exception.BreakStatement;
 import org.example.Lox.Exception.Return;
 import org.example.Lox.Exception.RuntimeError;
 
@@ -9,7 +10,6 @@ import java.util.List;
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public final Environment globals = new Environment();
     private Environment environment = globals;
-    private Boolean hitBreak = false;
 
     public Interpreter() {
         var clockToken = new Token(TokenType.IDENTIFIER, "clock", null, 0);
@@ -42,7 +42,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     private void execute(Stmt stmt) {
-        if (hitBreak) return;
         stmt.accept(this);
     }
 
@@ -80,17 +79,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
-            if (hitBreak) break;
+            try {
+                execute(stmt.body);
+            } catch (BreakStatement breakStatement) {
+                return null;
+            }
         }
-        hitBreak = false;
         return null;
     }
 
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
-        hitBreak = true;
-        return null;
+        throw new BreakStatement();
     }
 
     @Override
