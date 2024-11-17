@@ -1,5 +1,7 @@
 package org.example.Lox;
 
+import org.example.Lox.Exception.Return;
+
 import java.util.List;
 
 public class LoxFunction implements LoxCallable {
@@ -14,7 +16,11 @@ public class LoxFunction implements LoxCallable {
         for(int i = 0; i < this.arity(); i++) {
             environment.define(declaration.params.get(i), arguments.get(i));
         }
-        interpreter.executeBlock(declaration.body, environment);
+        try {
+            interpreter.executeBlock(declaration.body, environment);
+        } catch (Return returnValue) {
+            return returnValue.getValue();
+        }
         return null;
     }
 
