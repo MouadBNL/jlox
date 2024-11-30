@@ -1,18 +1,14 @@
-class Cake {
-  taste() {
-    var adjective = "delicious";
-    print "The " + this.flavor + " cake is " + adjective + "!";
+class Circle {
+  init(radius) {
+    this.radius = radius;
+  }
+
+  area() {
+    return 3.141592653 * this.radius * this.radius;
   }
 }
 
-var cake = Cake();
-cake.flavor = "German chocolate";
-cake.taste();
-
-fun notAMethod() {
-    print this;
-}
-
-notAMethod();
-
-print this;
+var circle = Circle(4);
+print circle.area();
+print circle.init(5);
+print circle.area();

@@ -37,4 +37,7 @@ public class Token {
     public String toString() {
         return type + " " + lexeme + " " + literal;
     }
+
+
+    public static Token THIS = new Token(TokenType.THIS, "this", null, 0);
 }
