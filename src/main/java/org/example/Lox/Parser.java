@@ -322,7 +322,13 @@ public class Parser {
         if(match(TokenType.FALSE)) return new Expr.Literal(false);
         if(match(TokenType.TRUE)) return new Expr.Literal(true);
         if(match(TokenType.NIL)) return new Expr.Literal(null);
-        if (match(TokenType.THIS)) return new Expr.This(previous());
+        if(match(TokenType.THIS)) return new Expr.This(previous());
+        if(match(TokenType.SUPER)) {
+            Token keyword = previous();
+            consume(TokenType.DOT, "Expected '.' after super keyword");
+            Token method = consume(TokenType.IDENTIFIER, "Expected superclass method name");
+            return new Expr.Super(keyword, method);
+        }
         if(match(TokenType.NUMBER, TokenType.STRING))
             return new Expr.Literal(previous().literal);
         if(match(TokenType.LEFT_PAREN)) {

@@ -40,4 +40,5 @@ public class Token {
 
 
     public static Token THIS = new Token(TokenType.THIS, "this", null, 0);
+    public static Token SUPER = new Token(TokenType.SUPER,"super", null, 0);
 }

@@ -1,5 +1,6 @@
 class Rectangle {
     init(h, w) {
+        super.init();
         this.h = h;
         this.w = w;
     }
@@ -11,8 +12,7 @@ class Rectangle {
 
 class Square < Rectangle {
     init(h) {
-        this.h = h;
-        this.w = h;
+        super.init(h, h);
     }
 }
 
@@ -21,3 +21,4 @@ var s = Square(4);
 
 print r.area();
 print s.area();
+
