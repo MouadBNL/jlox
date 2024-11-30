@@ -1,14 +1,23 @@
-class Circle {
-  init(radius) {
-    this.radius = radius;
-  }
+class Rectangle {
+    init(h, w) {
+        this.h = h;
+        this.w = w;
+    }
 
-  area() {
-    return 3.141592653 * this.radius * this.radius;
-  }
+    area() {
+        return this.h * this.w;
+    }
 }
 
-var circle = Circle(4);
-print circle.area();
-print circle.init(5);
-print circle.area();
+class Square < Rectangle {
+    init(h) {
+        this.h = h;
+        this.w = h;
+    }
+}
+
+var r = Rectangle(2, 4);
+var s = Square(4);
+
+print r.area();
+print s.area();

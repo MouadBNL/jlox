@@ -40,13 +40,18 @@ public class Parser {
 
     private Stmt classDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Expect class name.");
+        Expr.Variable superClass = null;
+        if(match(TokenType.LESS)) {
+            consume(TokenType.IDENTIFIER, "Expected superclass name.");
+            superClass = new Expr.Variable(previous());
+        }
         consume(TokenType.LEFT_BRACE, "Expected '{' before the class body.");
         List<Stmt.Function> methods = new ArrayList<>();
         while(!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
             methods.add(functionDeclaration("method"));
         }
         consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
-        return new Stmt.Class(name, methods);
+        return new Stmt.Class(name, superClass, methods);
     }
 
     private Stmt varDeclaration() {
