@@ -250,6 +250,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperand(expr.operator, right);
                 return -(double) right;
             }
+            case INCREMENT -> {
+                if (!(expr.right instanceof Expr.Variable exprRight)) {
+                    throw new RuntimeError(expr.operator, "Increment operation expected a variable");
+                }
+                checkNumberOperand(expr.operator, right);
+                environment.assign(exprRight.name, (double) right + 1);
+                if(expr.isPostfix) return (double) right;
+                return (double) right + 1;
+            }
+            case DECREMENT -> {
+                if (!(expr.right instanceof Expr.Variable exprRight)) {
+                    throw new RuntimeError(expr.operator, "Increment operation expected a variable");
+                }
+                checkNumberOperand(expr.operator, right);
+                environment.assign(exprRight.name, (double) right - 1);
+                if(expr.isPostfix) return (double) right;
+                return (double) right - 1;
+            }
         }
 
         return null;

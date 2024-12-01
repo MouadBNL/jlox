@@ -1,24 +1,7 @@
-class Rectangle {
-    init(h, w) {
-        super.init();
-        this.h = h;
-        this.w = w;
-    }
 
-    area() {
-        return this.h * this.w;
-    }
-}
-
-class Square < Rectangle {
-    init(h) {
-        super.init(h, h);
-    }
-}
-
-var r = Rectangle(2, 4);
-var s = Square(4);
-
-print r.area();
-print s.area();
-
+var i = 0;
+var j = 0;
+var x = i++;
+var y = ++j;
+print "X: " + x + ", Y: " + y;
+print "I: " + i + ", J: " + j;

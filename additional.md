@@ -1,5 +1,5 @@
 # Additional features to add:
-- [ ] Add simple sugar syntax for incrementing (i++)
+- [x] Add Prefix/Postfix ++/-- unary operations
 - [ ] Add Traits to share functionalities
 - [ ] Add basic types
 - [ ] Add scan function to interact with the user

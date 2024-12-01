@@ -282,8 +282,21 @@ public class Parser {
     }
 
     private Expr unary() {
-        if(match(TokenType.BANG, TokenType.MINUS)) {
-            return new Expr.Unary(previous(), unary());
+        if(match(TokenType.BANG, TokenType.MINUS, TokenType.INCREMENT, TokenType.DECREMENT)) {
+            return new Expr.Unary(previous(), unary(), false);
+        }
+//        if(match(TokenType.INCREMENT, TokenType.DECREMENT)) {
+//            return new Expr.Unary(previous(), primary());
+//        }
+        return postfixUnary();
+    }
+
+    private Expr postfixUnary() {
+        if(checkNext(TokenType.INCREMENT, TokenType.DECREMENT)) {
+            Expr left = primary();
+            Token operator = peek();
+            advance();
+            return new Expr.Unary(operator, left, true);
         }
         return call();
     }
@@ -357,6 +370,18 @@ public class Parser {
         return false;
     }
 
+    private boolean checkNext(TokenType... tokenTypes) {
+        advance();
+        for(TokenType type: tokenTypes) {
+            if(check(type)) {
+                regress();
+                return true;
+            }
+        }
+        regress();
+        return false;
+    }
+
     private boolean check(TokenType type) {
         if(isAtEnd()) return false;
         return Objects.requireNonNull(peek()).type == type;
@@ -377,6 +402,11 @@ public class Parser {
     private Token advance() {
         if(!isAtEnd()) current++;
         return previous();
+    }
+
+    private Token regress() {
+        if(current > 0) current--;
+        return peek();
     }
 
     private Token consume(TokenType type, String message) {

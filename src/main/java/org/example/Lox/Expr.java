@@ -160,9 +160,10 @@ public abstract class Expr {
     final Token keyword;
   }
   public static class Unary extends Expr {
-    Unary(Token operator, Expr right) {
+    Unary(Token operator, Expr right, boolean isPostfix) {
       this.operator = operator;
       this.right = right;
+      this.isPostfix = isPostfix;
     }
 
     @Override
@@ -172,6 +173,7 @@ public abstract class Expr {
 
     final Token operator;
     final Expr right;
+    final boolean isPostfix;
   }
   public static class Variable extends Expr {
     Variable(Token name) {
