@@ -6,9 +6,10 @@ A Tree-Walk Interpreter from craftinginterpreters.com
 - [x] Representing Code
 - [x] Parsing Expressions
 - [x] Evaluating Expressions
-- [ ] Statements and State
-- [ ] Control Flow
-- [ ] Functions
-- [ ] Resolving and Binding
-- [ ] Classes
-- [ ] Inheritance
+- [x] Statements and State
+- [x] Control Flow
+- [x] Functions
+- [x] Resolving and Binding
+- [x] Classes
+- [x] Inheritance
+- [x] ++/-- Prefix and Postfix operators
