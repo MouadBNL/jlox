@@ -13,8 +13,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public final Environment globals = new Environment();
     private Environment environment = globals;
     private final Map<Expr, Integer> locals = new HashMap<>();
+    private final Lox loxInstance;
 
-    public Interpreter() {
+    public Interpreter(Lox parent) {
+        loxInstance = parent;
         var clockToken = new Token(TokenType.IDENTIFIER, "clock", null, 0);
         globals.define(clockToken, new LoxCallable() {
             @Override
@@ -40,11 +42,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 execute(stmt);
             }
         } catch (RuntimeError error) {
-            Lox.runtimeError(error);
+            loxInstance.runtimeError(error);
         } catch (BreakStatement breakStatement) {
-            Lox.runtimeError(new RuntimeError(breakStatement.getToken(), "Cannot break outside of a loop"));
+            loxInstance.runtimeError(new RuntimeError(breakStatement.getToken(), "Cannot break outside of a loop"));
         } catch (Return returnStatement) {
-            Lox.runtimeError(new RuntimeError(returnStatement.getToken(), "Cannot return outside of a callable"));
+            loxInstance.runtimeError(new RuntimeError(returnStatement.getToken(), "Cannot return outside of a callable"));
         }
     }
 
@@ -147,7 +149,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
-        System.out.println(stringify(value));
+        loxInstance.stdout.pushLine(stringify(value));
+        loxInstance.stdout.flush();
+        //System.out.println(stringify(value));
         return null;
     }
 

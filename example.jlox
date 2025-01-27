@@ -1,7 +1,9 @@
 
+print "Hello world";
 var i = 0;
 var j = 0;
 var x = i++;
 var y = ++j;
 print "X: " + x + ", Y: " + y;
 print "I: " + i + ", J: " + j;
+var i = 0;

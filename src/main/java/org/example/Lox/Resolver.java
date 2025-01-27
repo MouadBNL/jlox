@@ -7,11 +7,13 @@ import java.util.Stack;
 
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
+    private final Lox loxInstance;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
     private FunctionType currentFunction = FunctionType.NONE;
     private ClassType currentClass = ClassType.NONE;
     public int loopCount = 0;
-    public Resolver(Interpreter interpreter) {
+    public Resolver(Interpreter interpreter, Lox lox) {
+        this.loxInstance = lox;
         this.interpreter = interpreter;
     }
 
@@ -44,7 +46,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         if(stmt.superClass != null) {
             if(stmt.superClass.name.lexeme.equals(stmt.name.lexeme)) {
-                Lox.error(stmt.superClass.name, "A class can't inherit from itself.");
+                loxInstance.error(stmt.superClass.name, "A class can't inherit from itself.");
             }
             currentClass = ClassType.SUBCLASS;
             resolve(stmt.superClass);
@@ -140,9 +142,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitSuperExpr(Expr.Super expr) {
         if(currentClass == ClassType.NONE) {
-            Lox.error(expr.keyword, "Can't use 'super' outside of a class");
+            loxInstance.error(expr.keyword, "Can't use 'super' outside of a class");
         } else if (currentClass != ClassType.SUBCLASS) {
-            Lox.error(expr.keyword,
+            loxInstance.error(expr.keyword,
                     "Can't use 'super' in a class with no superclass.");
         }
         resolveLocal(expr, expr.keyword);
@@ -152,7 +154,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitThisExpr(Expr.This expr) {
         if(currentClass == ClassType.NONE) {
-            Lox.error(expr.keyword, "Can't use 'this' outside of a class.");
+            loxInstance.error(expr.keyword, "Can't use 'this' outside of a class.");
         }
         resolveLocal(expr, expr.keyword);
         return null;
@@ -167,7 +169,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
         if(!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
-            Lox.error(expr.name, "Can't read local variable in its own initializer.");
+            loxInstance.error(expr.name, "Can't read local variable in its own initializer.");
         }
         resolveLocal(expr, expr.name);
         return null;
@@ -209,7 +211,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
         if(loopCount <= 0) {
-            Lox.error(stmt.breakToken, "Can't break outside of a loop or <switch> statement.");
+            loxInstance.error(stmt.breakToken, "Can't break outside of a loop or <switch> statement.");
         }
         return null;
     }
@@ -223,11 +225,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
         if (currentFunction == FunctionType.NONE) {
-            Lox.error(stmt.keyword, "Can't return from top-level code.");
+            loxInstance.error(stmt.keyword, "Can't return from top-level code.");
         }
         if(stmt.value != null){
             if(currentFunction == FunctionType.INITIALIZER) {
-                Lox.error(stmt.keyword,"Can't return a value from an initializer.");
+                loxInstance.error(stmt.keyword,"Can't return a value from an initializer.");
             }
             resolve(stmt.value);
         }
@@ -259,7 +261,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         if(scopes.isEmpty()) return;
         var scope = scopes.peek();
         if (scope.containsKey(name.lexeme)) {
-            Lox.error(name,
+            loxInstance.error(name,
                     "Already a variable with this name in this scope.");
         }
         scope.put(name.lexeme, false);

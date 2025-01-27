@@ -1,6 +1,8 @@
 package org.example.Lox;
 
 import org.example.Lox.Exception.RuntimeError;
+import org.example.Lox.StreamBuffers.StandardErrorBuffer;
+import org.example.Lox.StreamBuffers.StandardOutputBuffer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,31 +13,39 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
-    public static final Interpreter interpreter = new Interpreter();
-    static Boolean hadError = false;
-    static Boolean hadRuntimeError = false;
+    public Interpreter interpreter;
+    public Boolean hadError = false;
+    public Boolean hadRuntimeError = false;
+    public StandardOutputBuffer stdout;
+    public StandardErrorBuffer stderr;
 
-    public static void run(String src) {
-        Scanner scanner = new Scanner(src);
+    public Lox() {
+        this.interpreter = new Interpreter(this);
+        stdout = new StandardOutputBuffer();
+        stderr = new StandardErrorBuffer();
+    }
+
+    public void run(String src) {
+        Scanner scanner = new Scanner(src, this);
         List<Token> tokens = scanner.scanTokens();
-        Parser parser = new Parser(tokens);
+        Parser parser = new Parser(tokens, this);
         List<Stmt> statements = parser.parse();
         if(hadError) return;
 
-        Resolver resolver = new Resolver(interpreter);
+        Resolver resolver = new Resolver(interpreter, this);
         resolver.resolve(statements);
         if (hadError) return;
 
         interpreter.interpret(statements);
 
     }
-    public static void runFile(String path) throws IOException {
+    public void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
         if(hadError) System.exit(65);
         if(hadRuntimeError) System.exit(70);
     }
-    public static void runPrompt() throws IOException {
+    public void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
@@ -50,11 +60,11 @@ public class Lox {
     }
 
 
-    public static void error(int line, String message) {
+    public void error(int line, String message) {
         report(line, "", message);
     }
 
-    public static void error(Token token,String message) {
+    public void error(Token token,String message) {
         if(token.type == TokenType.EOF) {
             report(token.line, ", at end", message);
         } else {
@@ -62,8 +72,10 @@ public class Lox {
         }
     }
 
-    public static void report(int line, String where, String message) {
-        System.err.println("[Line "+ line +"] Error " + where + ": " + message);
+    public void report(int line, String where, String message) {
+        stderr.pushLine("[Line "+ line +"] Error " + where + ": " + message);
+        stderr.flush();
+        //System.err.println("[Line "+ line +"] Error " + where + ": " + message);
         hadError = true;
     }
 
@@ -84,8 +96,10 @@ public class Lox {
         System.out.println(printer.print(expr));
     }
 
-    public static void runtimeError(RuntimeError error) {
-        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+    public void runtimeError(RuntimeError error) {
+        stderr.pushLine(error.getMessage() + "\n[line " + error.token.line + "]");
+        stderr.flush();
+        //System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
         hadRuntimeError = true;
     }
 }

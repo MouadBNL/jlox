@@ -8,12 +8,14 @@ import java.util.Map;
 public class Scanner {
     final String source;
     final List<Token> tokens = new ArrayList<>();
+    private final Lox loxInstance;
     private static final Map<String, TokenType> keywords;
     private int start = 0;
     private int current = 0;
     private int line = 1;
 
-    public Scanner(String src) {
+    public Scanner(String src, Lox lox) {
+        loxInstance = lox;
         this.source = src;
     }
 
@@ -51,7 +53,7 @@ public class Scanner {
                     while (peek() != '*' || peekNext() != '/') {
                         if(peek() == '\n') line++;
                         if(isAtEnd()) {
-                            Lox.error(line, "Expected to close comment '*/'");
+                            loxInstance.error(line, "Expected to close comment '*/'");
                             return;
                         }
                         advance();
@@ -78,7 +80,7 @@ public class Scanner {
                 } else if(isAlpha(c)){
                     identifier();
                 } else {
-                    Lox.error(line, "Unexpected character found: '" + c  + "'");
+                    loxInstance.error(line, "Unexpected character found: '" + c  + "'");
                 }
                 break;
         }
@@ -127,7 +129,7 @@ public class Scanner {
         }
 
         if(isAtEnd()) {
-            Lox.error(line, "Expected '\"' to end the stirng.");
+            loxInstance.error(line, "Expected '\"' to end the stirng.");
             return;
         }
         advance();

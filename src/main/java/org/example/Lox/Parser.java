@@ -8,10 +8,12 @@ import java.util.Objects;
 public class Parser {
     private static class ParseError extends RuntimeException {}
     private final List<Token> tokens;
+    private final Lox loxInstance;
     private int current = 0;
 
-    Parser(List<Token> tokens) {
+    Parser(List<Token> tokens, Lox lox) {
         this.tokens = tokens;
+        this.loxInstance = lox;
     }
 
     public List<Stmt> parse() {
@@ -414,7 +416,7 @@ public class Parser {
         throw error(peek(), message);
     }
     private ParseError error(Token token, String message) {
-        Lox.error(token, message);
+        loxInstance.error(token, message);
         return new ParseError();
     }
     private void synchronize() {
