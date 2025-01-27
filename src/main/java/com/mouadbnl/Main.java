@@ -1,6 +1,7 @@
-package org.example;
+package com.mouadbnl;
 
-import org.example.Lox.Lox;
+import com.mouadbnl.Lox.Lox;
+
 import java.io.IOException;
 
 public class Main {

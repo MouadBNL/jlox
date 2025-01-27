@@ -1,8 +1,8 @@
-package org.example.Lox;
+package com.mouadbnl.Lox;
 
-import org.example.Lox.Exception.BreakStatement;
-import org.example.Lox.Exception.Return;
-import org.example.Lox.Exception.RuntimeError;
+import com.mouadbnl.Lox.Exception.BreakStatement;
+import com.mouadbnl.Lox.Exception.Return;
+import com.mouadbnl.Lox.Exception.RuntimeError;
 
 import java.util.ArrayList;
 import java.util.HashMap;

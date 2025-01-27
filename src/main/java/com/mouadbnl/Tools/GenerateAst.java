@@ -1,4 +1,4 @@
-package org.example.Tools;
+package com.mouadbnl.Tools;
 
 import java.io.IOException;
 import java.io.PrintWriter;

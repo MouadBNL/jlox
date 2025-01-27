@@ -1,4 +1,4 @@
-package org.example.Lox;
+package com.mouadbnl.Lox;
 
 enum TokenType {
     // Single-character tokens.

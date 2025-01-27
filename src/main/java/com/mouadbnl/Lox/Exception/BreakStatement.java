@@ -1,6 +1,6 @@
-package org.example.Lox.Exception;
+package com.mouadbnl.Lox.Exception;
 
-import org.example.Lox.Token;
+import com.mouadbnl.Lox.Token;
 
 public class BreakStatement extends RuntimeException {
     final Token token;

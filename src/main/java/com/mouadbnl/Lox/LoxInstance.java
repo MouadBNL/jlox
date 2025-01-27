@@ -1,6 +1,6 @@
-package org.example.Lox;
+package com.mouadbnl.Lox;
 
-import org.example.Lox.Exception.RuntimeError;
+import com.mouadbnl.Lox.Exception.RuntimeError;
 
 import java.util.HashMap;
 import java.util.Map;

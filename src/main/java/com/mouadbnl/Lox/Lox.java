@@ -1,8 +1,8 @@
-package org.example.Lox;
+package com.mouadbnl.Lox;
 
-import org.example.Lox.Exception.RuntimeError;
-import org.example.Lox.StreamBuffers.StandardErrorBuffer;
-import org.example.Lox.StreamBuffers.StandardOutputBuffer;
+import com.mouadbnl.Lox.StreamBuffers.StandardErrorBuffer;
+import com.mouadbnl.Lox.StreamBuffers.StandardOutputBuffer;
+import com.mouadbnl.Lox.Exception.RuntimeError;
 
 import java.io.BufferedReader;
 import java.io.IOException;

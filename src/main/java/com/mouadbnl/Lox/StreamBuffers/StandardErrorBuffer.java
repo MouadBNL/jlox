@@ -1,4 +1,4 @@
-package org.example.Lox.StreamBuffers;
+package com.mouadbnl.Lox.StreamBuffers;
 
 public class StandardErrorBuffer {
     String content = "";
